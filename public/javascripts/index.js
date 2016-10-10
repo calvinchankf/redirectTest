@@ -1,22 +1,26 @@
 window.onload = function() {
 
-  // get params, for now, it is only for redirect_url...
-  var querystring = window.location.search.substring(1);
-  var raw = querystring.split('&');
-  var qnps = []; // queries and params
-  for (var i = 0; i < raw.length; i++) {
-    var temp = raw[i].split('=');
-    qnps.push({
-      query: temp[0],
-      param: temp[1]
-    });
+  // reactApp will pass a redirect_url for your gateway to go back reactApp
+  // so you needa get the redirect_url from querystring
+  // of cox you can you other methods to get it, the below method is just for your convenience
+  function getRedirectURL() {
+    var querystring = window.location.search.substring(1);
+    var raw = querystring.split('&');
+    var qnps = []; // queries and params
+    for (var i = 0; i < raw.length; i++) {
+      var temp = raw[i].split('=');
+      qnps.push({
+        query: temp[0],
+        param: temp[1]
+      });
+    }
+    return qnps[0].param;
   }
-  var reactAppBaseURL = qnps[0].param;
-  console.log(JSON.stringify(qnps));
+  var reactAppBaseURL = getRedirectURL();
 
   // first time payment
   function fisrtPaid() {
-    // construct queries with url encoding
+    // construct queries with URL encoding
     var transaction_type = encodeURIComponent("sale,create_payment_token");
     var response_code = encodeURIComponent(100);
     var response_message = encodeURIComponent("Request was processed successfully.");
@@ -35,7 +39,7 @@ window.onload = function() {
 
   // add credit card
   function creditCardAdded() {
-    // construct queries with url encoding
+    // construct queries with URL encoding
     var transaction_type = encodeURIComponent("create_payment_token");
     var response_code = encodeURIComponent(100);
     var response_message = encodeURIComponent("Request was processed successfully.");
